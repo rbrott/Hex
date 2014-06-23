@@ -1,9 +1,10 @@
 package com.hex;
 
-import java.util.HashMap;
+import java.util.Map.Entry;
 
 import com.hex.model.GameModel;
 import com.hex.model.Hex;
+import com.hex.model.HexData;
 import com.hex.model.Point;
 
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,14 +46,28 @@ public class GameGridView extends View {
 			done = true;
 		}
 		Paint paint = new Paint();
+		paint.setTextSize(50F);
 		paint.setStrokeWidth(10F);
-		for(HashMap.Entry<String, Hex> entry : gameModel.getGrid().entrySet()) {
-			paint.setStyle(Style.STROKE);
-			paint.setColor(Color.WHITE);
-			canvas.drawPath(entry.getValue().getPath(), paint);
+		HexData value;
+		Point key;
+		Path path;
+		for(Entry<String, HexData> entry : gameModel.getGrid().entrySet()) {
+			value = entry.getValue();
+			key = new Point(entry.getKey());
+			path = Hex.getPath(key, gameModel.getSideLength());
+			
+//			paint.setStyle(Style.STROKE);
+//			paint.setColor(Color.WHITE);
+//			canvas.drawPath(path, paint);
+			
 			paint.setStyle(Style.FILL);
-			paint.setColor(entry.getValue().getColor());
-			canvas.drawPath(entry.getValue().getPath(), paint);
+			paint.setColor(value.color);
+			canvas.drawPath(path, paint);
+			
+			
+			paint.setStyle(Style.STROKE);
+			paint.setColor(Color.BLACK);
+			canvas.drawText(value.depth + "", (float) key.getX(), (float) key.getY(), paint);
 		}
 	}
 
