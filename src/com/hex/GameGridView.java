@@ -56,18 +56,13 @@ public class GameGridView extends View {
 			key = new Point(entry.getKey());
 			path = Hex.getPath(key, gameModel.getSideLength());
 			
-//			paint.setStyle(Style.STROKE);
+//			paint.setStyle(Paint.Style.STROKE);
 //			paint.setColor(Color.WHITE);
 //			canvas.drawPath(path, paint);
 			
-			paint.setStyle(Style.FILL);
+			paint.setStyle(Paint.Style.FILL);
 			paint.setColor(value.color);
 			canvas.drawPath(path, paint);
-			
-			
-			paint.setStyle(Style.STROKE);
-			paint.setColor(Color.BLACK);
-			canvas.drawText(value.depth + "", (float) key.getX(), (float) key.getY(), paint);
 		}
 	}
 
