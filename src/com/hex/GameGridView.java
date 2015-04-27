@@ -1,26 +1,22 @@
 package com.hex;
 
-import java.util.Map.Entry;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.util.AttributeSet;
+import android.view.View;
 
 import com.hex.model.GameModel;
 import com.hex.model.Hex;
 import com.hex.model.HexData;
 import com.hex.model.Point;
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Paint.Style;
-import android.graphics.Path;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.View;
+import java.util.Map.Entry;
 
 public class GameGridView extends View {
 	
 	public GameModel gameModel = null;
-	private boolean done = false;
 	
 	public GameGridView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
@@ -41,24 +37,19 @@ public class GameGridView extends View {
 	protected void onDraw(Canvas canvas) {
 		// TODO Auto-generated method stub
 		gameModel = ((GameActivity) getContext()).getGameModel();
-		if (!done) {
-			gameModel.generateGrid(new Point(getWidth() / 2, getHeight() / 2), 80, 4);
-			done = true;
-		}
+		float modifiedWidth = canvas.getWidth() / (gameModel.getDepth() * 2 - 1);
+		float size = 0.8F * modifiedWidth;
+		float padding = 0.05F * modifiedWidth;
+		canvas.translate(canvas.getWidth() / 2, canvas.getHeight() / 2);
 		Paint paint = new Paint();
-		paint.setTextSize(50F);
 		paint.setStrokeWidth(10F);
 		HexData value;
 		Point key;
 		Path path;
 		for(Entry<String, HexData> entry : gameModel.getGrid().entrySet()) {
 			value = entry.getValue();
-			key = new Point(entry.getKey());
-			path = Hex.getPath(key, gameModel.getSideLength());
-			
-//			paint.setStyle(Paint.Style.STROKE);
-//			paint.setColor(Color.WHITE);
-//			canvas.drawPath(path, paint);
+			key = Point.fromString(entry.getKey());
+			path = Hex.getPath(key, size, padding);
 			
 			paint.setStyle(Paint.Style.FILL);
 			paint.setColor(value.color);
@@ -66,12 +57,11 @@ public class GameGridView extends View {
 		}
 	}
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		// TODO Auto-generated method stub
-		gameModel.fireMotionEvent(event);
-		this.invalidate();
-		return super.onTouchEvent(event);
-	}
+//	@Override
+//	public boolean onTouchEvent(MotionEvent event) {
+//		gameModel.fireMotionEvent(event);
+//		this.invalidate();
+//		return super.onTouchEvent(event);
+//	}
 
 }

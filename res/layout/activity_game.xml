@@ -12,6 +12,7 @@
 
     <com.hex.GameGridView
         android:id="@+id/game_grid"
+        android:layout_below="@id/score_bar"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentBottom="true"
