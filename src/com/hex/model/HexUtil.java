@@ -58,11 +58,16 @@ public class HexUtil {
 		return (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
 	}
 
-//	public static Point[] getNeighbors(Point start) {
-//		Point[] points = {
-//			new Point(start.x)
-//		};
-//		return points;
-//	}
+	public static Point[] getNeighbors(Point start) {
+		Point[] points = {
+			new Point(start.x - .5F, start.y - 1),
+			new Point(start.x + .5F, start.y - 1),
+			new Point(start.x + 1, start.y),
+			new Point(start.x + .5F, start.y + 1),
+			new Point(start.x - .5F, start.y + 1),
+			new Point(start.x - 1, start.y)
+		};
+		return points;
+	}
 
 }

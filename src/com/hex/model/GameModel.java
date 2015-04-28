@@ -12,7 +12,7 @@ public class GameModel {
 	}
 	
 	public void fireMotionEvent(Point target) {
-		this.grid.put(target, new HexData(HexData.colors[0]));
+		this.grid.rotate(target);
 	}
 	
 	public int getScore() { return this.score; }

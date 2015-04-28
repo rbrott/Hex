@@ -38,4 +38,12 @@ public class Point {
 		return this.x + "," + this.y;
 	}
 
+	/**
+	 * This method creates a clone of the current point.
+	 * @return a clone of the current point
+	 */
+	public Point clone() {
+		return new Point(x, y);
+	}
+
 }

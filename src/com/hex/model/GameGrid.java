@@ -68,4 +68,20 @@ public class GameGrid  {
     public Set<Map.Entry<String, HexData>> entrySet() {
         return this.grid.entrySet();
     }
+
+    /**
+     * This method rotates a ring of hexagons around a point clockwise once.
+     * @param center the center point of the target hexagon
+     */
+    public void rotate(Point center) {
+        Point[] neighbors = HexUtil.getNeighbors(center);
+        for (Point p : neighbors) {
+            if (!this.grid.containsKey(p.toString())) return;
+        }
+        HexData first = get(neighbors[0]);
+        for (int i = 5; i > 0; i--) {
+            put(neighbors[(i+1)%6], get(neighbors[i]));
+        }
+        put(neighbors[1], first);
+    }
 }
