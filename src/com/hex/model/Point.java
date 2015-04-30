@@ -46,4 +46,19 @@ public class Point {
 		return new Point(x, y);
 	}
 
+	/**
+	 * This method checks whether or not the provided point is equivalent to this one.
+	 * @param other the other point
+	 * @return a boolean representing if the two points are equivalent or not
+	 */
+	public boolean equals(Object other) {
+		if (other == null) {
+			return false;
+		} else if (other instanceof Point) {
+			return this.x == ((Point) other).x && this.y == ((Point) other).y;
+		} else {
+			return false;
+		}
+	}
+
 }

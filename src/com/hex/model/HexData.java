@@ -1,10 +1,14 @@
 package com.hex.model;
 
+import java.util.Random;
+
 /**
  * This class stores various information about each hexagon.
  * @author Ryan Brott
  */
 public class HexData {
+
+	public static final Random rand = new Random();
 
 	public static int[] colors = {
 		0xff0077ff,
@@ -22,6 +26,10 @@ public class HexData {
 	 */
 	public HexData(int color) {
 		this.color = color;
+	}
+
+	public HexData() {
+		this.color = colors[rand.nextInt(colors.length)];
 	}
 
 }

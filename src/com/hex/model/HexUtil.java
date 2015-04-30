@@ -58,6 +58,11 @@ public class HexUtil {
 		return (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
 	}
 
+    /**
+     * This method generates the neighbors of any given hexagon at point start.
+     * @param start the point of the target hexagon
+     * @return an array of the points of the neighbors
+     */
 	public static Point[] getNeighbors(Point start) {
 		Point[] points = {
 			new Point(start.x - .5F, start.y - 1),
