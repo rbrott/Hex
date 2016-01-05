@@ -1,0 +1,94 @@
+package com.hex.model;
+
+import java.util.HashMap;
+import java.util.Stack;
+
+import android.util.Log;
+import android.view.MotionEvent;
+
+public class GameModel {
+	
+	private Point start;
+	private int score;
+	private int sideLength;
+	private HashMap<String, Hex> grid;
+	
+	public GameModel() {
+		score = 0;
+	}
+	
+	public void generateGrid(Point start, int sideLength, int depth) {
+		this.start = start;
+		this.sideLength = sideLength;
+		grid = new HashMap<String, Hex>();
+		Stack<Hex> queue = new Stack<Hex>();
+		Stack<Hex> temp = new Stack<Hex>();
+		queue.push(new Hex(start, sideLength));
+		Hex h;
+		Point p;
+		while (depth > 0) {
+			while (!queue.empty()) {
+				h = queue.pop();
+				p = h.getStart();
+				grid.put(p.getX() + "," + p.getY(), h);
+				for (Hex neighbor : h.getNeighbors()) {
+					p = neighbor.getStart();
+					if (!grid.containsKey(p.getX() + "," + p.getY())) {
+						temp.push(neighbor);
+					}
+				}
+				Log.i("HEX", h.getStart().toString());
+			}
+			while (!temp.empty()) {
+				h = temp.pop();
+				queue.push(h);
+			}
+			depth--;
+		}
+	}
+	
+	public double distance(int x1, int y1, int x2, int y2) {
+		return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+	}
+	
+	public void fireMotionEvent(MotionEvent motionEvent) {
+		int startX, startY;
+		int factor = (int) Math.round((Math.sqrt(3.0)/2.0)*sideLength);
+		int half = (int) Math.round(((double) sideLength)/2.0);
+		Point start;
+		Hex h;
+		for(HashMap.Entry<String, Hex> entry : grid.entrySet()) {
+			h = entry.getValue();
+			start = h.getStart();
+			startX = start.getX();
+			startY = start.getY() + sideLength;
+			if (distance(startX, startY, (int) motionEvent.getX(), (int) motionEvent.getY()) < Math.sqrt(3) * sideLength / 2) {
+				h.fireMotionEvent(motionEvent);
+				Point point;
+				int[][] args = {
+						{startX+factor, startY-3*half},
+						{startX+factor*2, startY},
+						{startX+factor, startY+3*half},
+						{startX-factor, startY+3*half},
+						{startX-factor*2, startY},
+						{startX-factor, startY-3*half}
+					};
+				Point p;
+				for (int i = 0; i < args.length; i++) {
+					p = new Point(args[i][0], args[i][1]);
+					neighbors.push(new Hex(p, sideLength));
+				}
+				for (Hex hex : h.getNeighbors()) {
+					point = hex.getStart();
+					grid.put(point.getX() + "," + point.getY(), hex);
+				}
+			}
+		}
+	}
+	
+	public int getScore() { return this.score; }
+	public void incrementScore(int val) { this.score = this.score + val; }
+	public void reset() { this.score = 0; }
+	public HashMap<String, Hex> getGrid() { return this.grid; }
+
+}

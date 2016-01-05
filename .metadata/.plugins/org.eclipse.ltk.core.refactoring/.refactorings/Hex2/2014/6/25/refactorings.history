@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Extract method &apos;private void updatePath(Point start, int sideLength)&apos; from &apos;com.hex.model.Hex.Hex()&apos; to &apos;com.hex.model.Hex&apos;&#x0D;&#x0A;- Original project: &apos;Hex2&apos;&#x0D;&#x0A;- Method name: &apos;updatePath&apos;&#x0D;&#x0A;- Destination type: &apos;com.hex.model.Hex&apos;&#x0D;&#x0A;- Declared visibility: &apos;private&apos;" comments="false" description="Extract method &apos;updatePath&apos;" destination="0" exceptions="false" flags="786434" id="org.eclipse.jdt.ui.extract.method" input="/src&lt;com.hex.model{Hex.java" name="updatePath" replace="false" selection="740 512" stamp="1402964579927" version="1.0" visibility="2"/>
+</session>

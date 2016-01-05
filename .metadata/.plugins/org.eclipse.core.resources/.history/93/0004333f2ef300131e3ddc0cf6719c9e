@@ -1,0 +1,106 @@
+package com.hex.model;
+
+import java.util.ArrayDeque;
+import java.util.HashMap;
+import java.util.Stack;
+
+import android.graphics.Color;
+import android.graphics.Paint.Style;
+import android.util.Log;
+import android.view.MotionEvent;
+
+public class GameModel {
+	
+	private Point start;
+	private int score;
+	private int sideLength;
+	private HashMap<String, Hex> grid;
+	
+	public GameModel() {
+		score = 0;
+	}
+	
+	public void generateGrid(Point start, int sideLength, int depth) {
+		this.start = start;
+		this.sideLength = sideLength;
+		grid = new HashMap<String, Hex>();
+		Stack<Hex> queue = new Stack<Hex>();
+		Stack<Hex> temp = new Stack<Hex>();
+		queue.push(new Hex(start, sideLength));
+		int startX, startY;
+		ArrayDeque<Hex> neighbors;
+		Hex h, h2;
+		Point p;
+		int factor = (int) Math.round((Math.sqrt(3.0)/2.0)*sideLength);
+		int half = (int) Math.round(((double) sideLength)/2.0);
+		while (depth > 0) {
+			while (!queue.empty()) {
+				h = queue.pop();
+				p = h.getStart();
+				startX = p.getX();
+				startY = p.getY();
+				grid.put(p.getX() + "," + p.getY(), h);
+				int[][] args = {
+						{startX+factor, startY-3*half},
+						{startX+factor*2, startY},
+						{startX+factor, startY+3*half},
+						{startX-factor, startY+3*half},
+						{startX-factor*2, startY},
+						{startX-factor, startY-3*half}
+					};
+				neighbors = new ArrayDeque<Hex>();
+				for (int i = 0; i < args.length; i++) {
+					p = new Point(args[i][0], args[i][1]);
+					if (!grid.containsKey(p.getX() + "," + p.getY())) {
+						h2 = new Hex(p, sideLength);
+						temp.push(h2);
+						neighbors.add(h2);
+					} else {
+						h2 = grid.get(p.getX() + "," + p.getY());
+						neighbors.add(h2);
+					}
+				}
+				h.setNeighbors(neighbors.clone());
+			}
+			while (!temp.empty()) {
+				h = temp.pop();
+				queue.push(h);
+			}
+			depth--;
+		}
+		for(HashMap.Entry<String, Hex> entry : grid.entrySet()) {
+			p = entry.getValue().getStart();
+			Log.i("HEX", "[" + entry.getKey() + "]" + entry.getValue());
+		}
+	}
+	
+	public double distance(int x1, int y1, int x2, int y2) {
+		return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+	}
+	
+	public void fireMotionEvent(MotionEvent motionEvent) {
+		int centerX, centerY;
+		Point start;
+		Hex h;
+		for(HashMap.Entry<String, Hex> entry : grid.entrySet()) {
+			h = entry.getValue();
+			start = h.getStart();
+			centerX = start.getX();
+			centerY = start.getY() + sideLength;
+			if (distance(centerX, centerY, (int) motionEvent.getX(), (int) motionEvent.getY()) < Math.sqrt(3) * sideLength / 2) {
+				h.fireMotionEvent(motionEvent);
+//				Point point;
+//				for (Hex hex : h.getNeighbors()) {
+//					point = hex.getStart();
+//					grid.put(point.getX() + "," + point.getY(), hex);
+//				}
+			}
+		}
+	}
+	
+	public int getScore() { return this.score; }
+	public void incrementScore(int val) { this.score = this.score + val; }
+	public void reset() { this.score = 0; }
+	public HashMap<String, Hex> getGrid() { return this.grid; }
+
+}

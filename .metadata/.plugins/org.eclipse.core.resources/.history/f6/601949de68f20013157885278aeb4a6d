@@ -1,0 +1,80 @@
+package com.hex.model;
+
+import java.util.Random;
+import java.util.Deque;
+
+import android.graphics.Path;
+import android.view.MotionEvent;
+
+public class Hex {
+	
+	public static int[] colors = {
+		0xff0077ff,
+		0xff9966cc,
+		0xff3b7a57,
+		0xffFfbf00,
+		0xffE34234
+	};
+	
+	private int color;
+	private int sideLength;
+	private Path path;
+	private Point start;
+	private Deque<Hex> neighbors;
+	
+	public Hex(Point start, int sideLength) {
+		Random rand = new Random();
+		this.color = Hex.colors[(int) Math.abs(rand.nextInt()) % Hex.colors.length];
+		this.neighbors = null;
+		this.start = start;
+		this.sideLength = sideLength;
+		// generate the hex vertices in here
+		int factor = (int) Math.round((Math.sqrt(3.0)/2.0)*sideLength);
+		int half = (int) Math.round(((double) sideLength)/2.0);
+		int startX = start.getX();
+		int startY = start.getY();
+		path = new Path();
+		path.moveTo(startX, startY);
+		path.lineTo(startX+factor, startY+half);
+		path.lineTo(startX+factor, startY+3*half);
+		path.lineTo(startX, 2*sideLength+startY);
+		path.lineTo(startX-factor, startY+3*half);
+		path.lineTo(startX-factor, startY+half);
+		path.lineTo(startX, startY);
+		path.close();
+	}
+
+	public Path getPath() { return this.path; }
+	public Deque<Hex> getNeighbors() { 
+		if (neighbors == null) {
+			neighbors = new Stack<Hex>();
+			int factor = (int) Math.round((Math.sqrt(3.0)/2.0)*sideLength);
+			int half = (int) Math.round(((double) sideLength)/2.0);
+			int startX = start.getX();
+			int startY = start.getY();
+			int[][] args = {
+					{startX+factor, startY-3*half},
+					{startX+factor*2, startY},
+					{startX+factor, startY+3*half},
+					{startX-factor, startY+3*half},
+					{startX-factor*2, startY},
+					{startX-factor, startY-3*half}
+				};
+			Point p;
+			for (int i = 0; i < args.length; i++) {
+				p = new Point(args[i][0], args[i][1]);
+				neighbors.push(new Hex(p, sideLength));
+			}
+		}
+		return this.neighbors;
+	}
+	
+	public void fireMotionEvent(MotionEvent motionEvent) {
+		neighbors.push(neighbors.removeFirst());
+	}
+	
+	public Point getStart() { return this.start; }
+	public int getColor() { return this.color; }
+	public void setcolor(int val) { this.color = val; }
+	
+}

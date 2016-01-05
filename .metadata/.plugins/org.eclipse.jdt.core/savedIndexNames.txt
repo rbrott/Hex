@@ -1,0 +1,2 @@
+INDEX VERSION 1.127+F:\Android\Hex\.metadata\.plugins\org.eclipse.jdt.core
+2554516882.index

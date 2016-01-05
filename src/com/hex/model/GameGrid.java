@@ -143,13 +143,17 @@ public class GameGrid  {
             }
         }
 
+        int incr = 0, i;
         for (ArrayList<Point> list : paths) {
-            if (hasScoreListener()) {
-                this.listener.onScore((int) Math.pow(2, list.size()));
-            }
+            i = 10;
             for (Point p : list) {
                 put(p, new HexData());
+                incr += i;
+                i += 10;
             }
         }
+
+        if (hasScoreListener()) listener.onScore(incr);
+
     }
 }
